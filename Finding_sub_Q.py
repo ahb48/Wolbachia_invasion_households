@@ -2,7 +2,7 @@
 import numpy as np
 import itertools
 from Finding_dictionary_keys import find_keys
-from Rate_transitions import get_transition, get_transition_rev, get_transition_Hughes
+from Rate_transitions import get_transition, get_transition_Hughes
 from Tridiagonalisation import tridiagonal
 
 def getQk(state_dict_k, state_dict, Q, params_dict):

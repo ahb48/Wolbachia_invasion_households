@@ -26,7 +26,7 @@ def get_transition(state1, state2, p):
     return rate  # returns required rate
 
 
-from Hughes_model import F_hughes # importing Dye's larval density function
+from Hughes_model import F_hughes as F # importing Dye's larval density function
 # will need to alter for alternative larval density function
 
 def get_transition_Hughes(state1, state2, p):
