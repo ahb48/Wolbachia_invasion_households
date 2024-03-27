@@ -1,5 +1,5 @@
 # import libraries
-from Finding_sub_Q import getQk, getQk_rev, getQk_Hughes
+from Finding_sub_Q import getQk getQk_Hughes
 import numpy as np
 from Rate_transitions import get_transition, get_transition_Hughes
 
