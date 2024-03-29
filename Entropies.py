@@ -23,4 +23,4 @@ def entropy(Q_lower_block_triang, quasi_stat_dist):
             Hi += plogp    # reassigning the individual entropy value
         H_vec[i] = -Hi     # recording the individual entropy in the array
         H -= quasi_stat_dist[i]*Hi   # updating the overall entropy
-    return H_vec,H    # returns array of individual state entropies and the overall entropy
+    return H_vec, H    # returns array of individual state entropies and the overall entropy
