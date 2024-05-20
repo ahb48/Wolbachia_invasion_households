@@ -1,8 +1,6 @@
 # import required libraries
 import random
 import numpy as np
-import math
-import itertools
 
 ''' Household class'''           
 class household: 

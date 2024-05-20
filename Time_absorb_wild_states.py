@@ -117,3 +117,63 @@ def absorb_time_wild_Hughes(max_pop,initial_guess,params_dict):
     u_solutions = fsolve(equations, initial_guess)
 
     return u_solutions  # return solutions
+
+### This is for the 3 mosquito model, no reversion but Hughes rates
+def absorb_time_wild_Hughes_comp(max_pop,initial_guess,params_dict):
+    state_dict = {index: np.array((i, j)) for index, (i, j) in enumerate([(i, j) for i in range(max_pop + 1) for j in   range(max_pop + 1) if i + j <= max_pop])}
+    trans_dict = {index: np.array((i, j)) for index, (i, j) in enumerate([(i, j) for i in range(1,max_pop + 1) for j in range(1,max_pop + 1) if i + j <= max_pop])}
+    n_transient = len(trans_dict) 
+    
+    prob_reach_wild = np.zeros(n_transient)
+    for i in range(max_pop):
+        absorb_state = np.array([i+1,0])
+        ac, Qcc = prob_reach_absorb_Hughes(state_dict,trans_dict,absorb_state,params_dict)
+        prob_reach_wild[:] += np.transpose(ac)[0]
+        
+    def equations(u_values):
+        eqns = []
+
+        for i in range(n_transient):
+            au_prod = np.zeros((n_transient+max_pop,1))
+            for j in range(n_transient):
+                au_prod[j] = prob_reach_wild[j] * u_values[j]
+                
+            eqn_i = (Qcc[i,:] @ au_prod[:n_transient]) + prob_reach_wild[i]
+            eqns.append(eqn_i)
+        return np.concatenate(eqns)
+
+    # Use fsolve to solve for u_values
+    u_solutions = fsolve(equations, initial_guess)
+
+    return u_solutions
+
+
+
+### This is for expected time until extinction (0,0) after Wolbachia invasion (no reversion)
+def absorb_time_ext(max_pop,initial_guess,params_dict):
+    state_dict = {index: np.array((i, j)) for index, (i, j) in enumerate([(i, j) for i in range(max_pop + 1) for j in   range(max_pop + 1) if i + j <= max_pop])}
+    trans_dict = {index: np.array((0, j)) for index, j in enumerate([j for j in range(1, max_pop + 1) if j <= max_pop])}
+    n_transient = len(trans_dict) 
+    
+    #prob_reach_ext = np.zeros(n_transient)
+    #for i in range(max_pop):
+    absorb_state = np.array([0,0])
+    ac, Qcc = prob_reach_absorb_Hughes(state_dict,trans_dict,absorb_state,params_dict)
+    prob_reach_ext = np.transpose(ac)[0]
+        
+    def equations(u_values):
+        eqns = []
+
+        for i in range(n_transient):
+            au_prod = np.zeros((n_transient+max_pop,1))
+            for j in range(n_transient):
+                au_prod[j] = prob_reach_ext[j] * u_values[j]
+                
+            eqn_i = (Qcc[i,:] @ au_prod[:n_transient]) + prob_reach_ext[i]
+            eqns.append(eqn_i)
+        return np.concatenate(eqns)
+
+    # Use fsolve to solve for u_values
+    u_solutions = fsolve(equations, initial_guess)
+
+    return u_solutions
